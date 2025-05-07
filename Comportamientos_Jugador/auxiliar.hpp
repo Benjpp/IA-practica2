@@ -1,6 +1,7 @@
 #ifndef COMPORTAMIENTOAUXILIAR_H
 #define COMPORTAMIENTOAUXILIAR_H
 
+#include <set>
 #include <chrono>
 #include <time.h>
 #include <thread>
@@ -13,9 +14,13 @@ class ComportamientoAuxiliar : public Comportamiento
 public:
   ComportamientoAuxiliar(unsigned int size = 0) : Comportamiento(size)
   {
+    contador0 = 0;
     ultima_accion = IDLE;
     tiene_zapatillas = false;
     giro45izq = 0;
+    backtrack = false; 
+    visitadosA = {};
+    acciones = {};
   }
   ComportamientoAuxiliar(std::vector<std::vector<unsigned char>> mapaR, std::vector<std::vector<unsigned char>> mapaC) : Comportamiento(mapaR,mapaC)
   {
@@ -38,6 +43,16 @@ private:
   Action ultima_accion;
   int giro45izq;
   bool tiene_zapatillas;
+  int contador0;
+  bool backtrack;
+  set<pair<int, int>> visitadosA;
+  vector<Action> acciones;
+  int backtrack_it;
+
+
+  int ahorro_giro();
+  int VeoCasillaInteresante(char i, char c, char d, Sensores sensores);
+  vector<pair<int, int>> pos_casilla_alrededor(Sensores sensores);
 };
 
 #endif
