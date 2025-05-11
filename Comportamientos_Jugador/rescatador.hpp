@@ -24,20 +24,29 @@ typedef struct NodoR{
   EstadoR estado;
   list<Action> secuencia;
   int coste;
+  int heuristica;
 
   bool operator==(const NodoR &node) const{
     return estado == node.estado;
   }
+
   bool operator<(const NodoR &node) const{
     if (estado.f < node.estado.f) return true;
-    else if (estado.f == node.estado.f && estado.c < node.estado.c) return true;
-    else if (estado.f == node.estado.f && estado.c == node.estado.c && estado.rumbo < node.estado.rumbo) return true;
-    else if (estado.f == node.estado.f && estado.c == node.estado.c && estado.rumbo ==
-      node.estado.rumbo && estado.zapatillas < node.estado.zapatillas) return true;
+    else if (estado.f == node.estado.f and estado.c < node.estado.c) return true;
+    else if (estado.f == node.estado.f and estado.c == node.estado.c and estado.rumbo <
+    node.estado.rumbo) return true;
+    else if (estado.f == node.estado.f and estado.c == node.estado.c and estado.rumbo ==
+    node.estado.rumbo and estado.zapatillas < node.estado.zapatillas) return true;
     else return false;
  }
 
 }NodoR;
+
+struct ComparaCosteR{
+  bool operator()(NodoR& n1, NodoR& n2) const{
+    return (n1.coste ) > (n2.coste );
+  }
+};
 
 class ComportamientoRescatador : public Comportamiento
 {
@@ -97,9 +106,9 @@ private:
 
   //Funciones nivel 2
   int CosteEnergia(const EstadoR& st, Action accion, const vector<vector<unsigned char>>& terreno, const vector<vector<unsigned char>>& altura);
-  bool Find(const NodoR& st, const list<NodoR>& lista);
   void VisualizaPlan(const EstadoR& st, const list<Action>& plan);
   list<Action> AnchuraRescatador(const EstadoR& inicio, const EstadoR& final, const vector<vector<unsigned char>>& terreno, const vector<vector<unsigned char>>& altura, const Sensores& sensores);
 };
+
 
 #endif

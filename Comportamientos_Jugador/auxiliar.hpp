@@ -6,6 +6,7 @@
 #include <chrono>
 #include <time.h>
 #include <thread>
+#include <queue>
 
 #include "comportamientos/comportamiento.hpp"
 
@@ -23,11 +24,27 @@ typedef struct EstadoA{
 typedef struct NodoA{
   EstadoA estado;
   list<Action> secuencia;
+  int coste;
+  int heuristica;
 
   bool operator==(const NodoA &node) const{
     return estado == node.estado;
   }
+  bool operator<(const NodoA &node) const{
+    if (estado.f < node.estado.f) return true;
+    else if (estado.f == node.estado.f && estado.c < node.estado.c) return true;
+    else if (estado.f == node.estado.f && estado.c == node.estado.c && estado.rumbo < node.estado.rumbo) return true;
+    else if (estado.f == node.estado.f && estado.c == node.estado.c && estado.rumbo ==
+      node.estado.rumbo && estado.zapatillas < node.estado.zapatillas) return true;
+    else return false;
+ }
 }NodoA;
+
+struct ComparaCosteA{
+  bool operator()(NodoA& n1, NodoA& n2) const{
+    return n1.coste > n2.coste;
+  }
+};
 
 class ComportamientoAuxiliar : public Comportamiento
 {
@@ -85,8 +102,7 @@ private:
 
   //Funciones nivel 3
   int CosteEnergia(const EstadoA& st, Action accion, const vector<vector<unsigned char>>& terreno, const vector<vector<unsigned char>>& altura);
-  list<Action> AnchuraAuxiliar(const EstadoA& inicio, const EstadoA& final, const vector<vector<unsigned char>>& terreno, const vector<vector<unsigned char>>& altura);
-  bool Find(const NodoA& st, const list<NodoA>& lista);
+  list<Action> AnchuraAuxiliar(const EstadoA& inicio, const EstadoA& final, const vector<vector<unsigned char>>& terreno, const vector<vector<unsigned char>>& altura, Sensores sensores);
   void VisualizaPlan(const EstadoA& st, const list<Action>& plan);
 };
 
